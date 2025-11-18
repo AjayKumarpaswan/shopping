@@ -10,14 +10,21 @@ const OrderDetails = () => {
 
     const { cartItems, deliveryDetails, subtotal, paymentId, quantities } = state;
 
-    /* 
-    --------------------------------------------------------
-      ✅ CALL BACKEND API LIKE YOUR /send-booking-confirmation  
-    --------------------------------------------------------
-    */
+    // ✅ Fetch logged-in user from LocalStorage
+    const user = JSON.parse(localStorage.getItem("user"));
+    console.log("Logged-in User:", user);
+
+    const hasSent = React.useRef(false);
+
     useEffect(() => {
-        const sendOrderNotification = async () => {
+        if (hasSent.current) return;
+        hasSent.current = true;
+
+        const processOrder = async () => {
             try {
+                /* ---------------------------------------------------------
+                    1️⃣ SEND WHATSAPP + EMAIL NOTIFICATION
+                --------------------------------------------------------- */
                 await axios.post(
                     "http://localhost:5000/api/send-order-confirmation",
                     {
@@ -28,17 +35,36 @@ const OrderDetails = () => {
                         quantities,
                     }
                 );
-
                 console.log("📩 Order confirmation sent via Email + WhatsApp!");
+
+                /* ---------------------------------------------------------
+                    2️⃣ SAVE ORDER TO MONGODB
+                --------------------------------------------------------- */
+                const orderRes = await axios.post("http://localhost:5000/api/orders", {
+                    userId: user?.id,
+                    cartItems,
+                    deliveryDetails,
+                    subtotal,
+                    paymentId,
+                    quantities,
+                });
+
+                // Check if duplicate
+                if (orderRes.data.message === "Order already exists") {
+                    console.log("⚠️ Order already exists in MongoDB!");
+                } else {
+                    console.log("🟢 Order successfully saved in MongoDB!");
+                }
+
             } catch (err) {
-                console.error("❌ Error sending order confirmation:", err);
+                console.error("❌ Error processing order:", err.response?.data || err);
             }
         };
 
         if (deliveryDetails?.email) {
-            sendOrderNotification();
+            processOrder();
         }
-    }, [cartItems, deliveryDetails, subtotal, paymentId, quantities]);
+    }, [cartItems, deliveryDetails, subtotal, paymentId, quantities, user]);
 
     return (
         <>
@@ -46,7 +72,6 @@ const OrderDetails = () => {
 
             <div className="pt-24 md:mt-20 px-4 md:px-10 bg-[#f7f7f7] min-h-screen text-gray-800">
 
-                {/* Title */}
                 <h1 className="text-3xl font-bold mb-6">Order Summary</h1>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -66,13 +91,13 @@ const OrderDetails = () => {
                             </div>
                         </div>
 
-                        {/* Products */}
+                        {/* Ordered Products */}
                         <div className="bg-white p-6 rounded-xl shadow-sm border">
                             <h2 className="text-xl font-semibold mb-4">Ordered Products</h2>
 
                             <div className="divide-y">
                                 {cartItems.map((item) => (
-                                    <div key={item.id} className="flex items-center justify-between py-4">
+                                    <div key={item._id} className="flex items-center justify-between py-4">
                                         <div className="flex items-center gap-4">
                                             <img
                                                 src={item.image}
@@ -81,7 +106,7 @@ const OrderDetails = () => {
                                             />
                                             <div>
                                                 <h3 className="font-semibold">{item.name}</h3>
-                                                <p className="text-sm text-gray-600">Qty: {quantities[item.id]}</p>
+                                                <p className="text-sm text-gray-600">Qty: {quantities[item._id]}</p>
                                                 <p className="text-sm text-gray-600">Size: {item.selectedSize}</p>
                                             </div>
                                         </div>

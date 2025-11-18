@@ -8,7 +8,7 @@ router.post("/send-order-confirmation", async (req, res) => {
   try {
     await Promise.all([
       sendOrderEmail(req, res, true),
-      sendOrderWhatsApp(req, res, true),
+       sendOrderWhatsApp(req, res, true),
     ]);
 
     res.status(200).json({

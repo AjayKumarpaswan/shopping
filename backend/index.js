@@ -13,8 +13,9 @@ import { sendEmail } from "./utils/sendEmail.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import emailRoutes from "./routes/emailRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
-
-
+import categoryRoutes from "./routes/categoryRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
+import orderSRoutes from "./routes/orderSRoutes.js";
 connectDB();
 
 const app = express();
@@ -37,6 +38,16 @@ app.use("/api/payment", paymentRoutes);
 //for email
 app.use("/api", emailRoutes);
 app.use("/api", orderRoutes);
+
+// categories and products routes
+// Category & Product APIs
+app.use("/api/categories", categoryRoutes);
+app.use("/api/products", productRoutes);
+
+
+// user order routes
+app.use("/api/orders", orderSRoutes);
+
 
 // Health
 app.get("/", (req, res) => res.send("Baan Nimbus API"));

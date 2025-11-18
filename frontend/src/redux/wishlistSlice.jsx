@@ -23,13 +23,15 @@ const wishlistSlice = createSlice({
         localStorage.setItem(`wishlist_${userId}`, JSON.stringify(state.items));
       }
     },
-    removeFromWishlist: (state, action) => {
-      state.items = state.items.filter((item) => item.id !== action.payload);
-      const userId = getUserId();
-      if (userId) {
-        localStorage.setItem(`wishlist_${userId}`, JSON.stringify(state.items));
-      }
-    },
+   removeFromWishlist: (state, action) => {
+  // Use _id to match the item
+  state.items = state.items.filter((item) => item._id !== action.payload);
+  const userId = getUserId();
+  if (userId) {
+    localStorage.setItem(`wishlist_${userId}`, JSON.stringify(state.items));
+  }
+},
+
     clearWishlistOnLogout: (state) => {
       state.items = [];
     },

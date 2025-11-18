@@ -10,6 +10,7 @@ const ProductDetail = () => {
     const navigate = useNavigate();
     const product = location.state?.product;
 
+    console.log("Product Detail:", product);
     const dispatch = useDispatch();
 
     const user = JSON.parse(localStorage.getItem("user"));
@@ -18,39 +19,56 @@ const ProductDetail = () => {
     const [selectedSize, setSelectedSize] = useState("");
 
     // Add to Bag Logic
-    const handleAddToBag = () => {
-        if (!user) {
-            alert("Please login to add items to your bag");
-            navigate("/login");
-            return;
-        }
+   const handleAddToBag = () => {
+    if (!user) {
+        alert("Please login to add items to your bag");
+        navigate("/login");
+        return;
+    }
 
-        if (!selectedSize) {
-            alert("Please select a size before adding to bag");
-            return;
-        }
+    if (!selectedSize) {
+        alert("Please select a size before adding to bag");
+        return;
+    }
 
-        dispatch(addToCart({ ...product, selectedSize }));
-        alert(`Product added to bag `);
+    const productWithImage = {
+        ...product,
+        selectedSize,
+        image: product.images && product.images.length > 0
+            ? `http://localhost:5000/uploads/${product.images[0]}`
+            : "/fallback.jpg"
     };
 
-    // Add to Wishlist Logic
-    const handleAddToWishlist = () => {
-        if (!user) {
-            alert("Please login to add items to your wishlist");
-            navigate("/login");
-            return;
-        }
+    dispatch(addToCart(productWithImage));
+    alert(`Product added to bag`);
+};
 
-        if (!selectedSize) {
-            alert("Please select a size before adding to wishlist");
-            return;
-        }
+// Add to Wishlist Logic
+const handleAddToWishlist = () => {
+    if (!user) {
+        alert("Please login to add items to your wishlist");
+        navigate("/login");
+        return;
+    }
 
-        dispatch(addToWishlist({ ...product, selectedSize }));
-        alert(`Product added to wishlist`);
-        navigate("/wishlist");
+    if (!selectedSize) {
+        alert("Please select a size before adding to wishlist");
+        return;
+    }
+
+    const productWithImage = {
+        ...product,
+        selectedSize,
+        image: product.images && product.images.length > 0
+            ? `http://localhost:5000/uploads/${product.images[0]}`
+            : "/fallback.jpg"
     };
+
+    dispatch(addToWishlist(productWithImage));
+    alert(`Product added to wishlist`);
+    navigate("/wishlist");
+};
+
 
     if (!product) {
         return (
@@ -74,10 +92,11 @@ const ProductDetail = () => {
                     {/* Left - Image */}
                     <div className="md:w-1/2 flex justify-center items-center bg-gray-50 p-4 rounded-lg">
                         <img
-                            src={product.image}
+                            src={product.images && product.images.length > 0 ? `http://localhost:5000/uploads/${product.images[0]}` : "/fallback.jpg"}
                             alt={product.name}
                             className="w-full h-[500px] object-contain rounded-md"
                         />
+
                     </div>
 
                     {/* Right - Details */}
@@ -99,11 +118,10 @@ const ProductDetail = () => {
                                     <button
                                         key={size}
                                         onClick={() => setSelectedSize(size)}
-                                        className={`border px-4 py-1 rounded hover:bg-gray-100 transition ${
-                                            selectedSize === size
-                                                ? "border-pink-600 bg-pink-100"
-                                                : "border-gray-300"
-                                        }`}
+                                        className={`border px-4 py-1 rounded hover:bg-gray-100 transition ${selectedSize === size
+                                            ? "border-pink-600 bg-pink-100"
+                                            : "border-gray-300"
+                                            }`}
                                     >
                                         {size}
                                     </button>

@@ -12,7 +12,7 @@ export const sendOrderEmail = async (req, res, skipResponse = false) => {
         <tr>
           <td style="padding: 8px; border-bottom: 1px solid #eee;">
             ${item.name} (Size: ${item.selectedSize})<br/>
-            Qty: ${quantities[item.id]}
+            Qty: ${quantities[item._id]}
           </td>
           <td style="padding: 8px; border-bottom: 1px solid #eee;">
             ₹${item.price}
@@ -61,7 +61,7 @@ export const sendOrderEmail = async (req, res, skipResponse = false) => {
             <strong>Payment ID:</strong> ${paymentId}
           </p>
 
-          <p style="margin-top:20px;">Thank you for shopping with us!</p>
+          <p style="margin-top:20px;">Thank you for shopping with us! ❤️</p>
         </div>
       `,
     };

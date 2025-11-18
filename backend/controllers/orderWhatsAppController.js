@@ -10,7 +10,7 @@ export const sendOrderWhatsApp = async (req, res, skipResponse = false) => {
       productsText += `
 🛍️ *${item.name}*
 Size: ${item.selectedSize}
-Qty: ${quantities[item.id]}
+Qty: ${quantities[item._id]}
 Price: ₹${item.price}
 
 `;

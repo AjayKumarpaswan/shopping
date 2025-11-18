@@ -10,15 +10,19 @@ const WishlistPage = () => {
   const navigate = useNavigate();
   const wishlistItems = useSelector((state) => state.wishlist.items);
 
+  console.log("Wishlist Items:", wishlistItems);
+
+  // Move item to cart
   const handleMoveToBag = (product) => {
-    dispatch(addToCart(product));
-    dispatch(removeFromWishlist(product.id));
+    dispatch(addToCart({ ...product, quantity: 1 }));
+    dispatch(removeFromWishlist(product._id)); // ✅ use _id
     alert("Product moved to bag");
     navigate("/cart");
   };
 
-  const handleRemove = (id) => {
-    dispatch(removeFromWishlist(id));
+  // Remove item from wishlist
+  const handleRemove = (_id) => {
+    dispatch(removeFromWishlist(_id)); // ✅ use _id
   };
 
   return (
@@ -37,7 +41,7 @@ const WishlistPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {wishlistItems.map((item) => (
               <div
-                key={item.id}
+                key={item._id} // ✅ key should match _id
                 className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between"
               >
                 {/* Image */}
@@ -58,13 +62,11 @@ const WishlistPage = () => {
                     {item.description}
                   </p>
                   {item.selectedSize && (
-    <p className="text-gray-700 font-medium text-sm">
-      Size: <span className="text-pink-600">{item.selectedSize}</span>
-    </p>
-  )}
-                  <p className="text-green-600 font-bold text-lg mt-1">
-                    ₹{item.price}
-                  </p>
+                    <p className="text-gray-700 font-medium text-sm">
+                      Size: <span className="text-pink-600">{item.selectedSize}</span>
+                    </p>
+                  )}
+                  <p className="text-green-600 font-bold text-lg mt-1">₹{item.price}</p>
                 </div>
 
                 {/* Buttons */}
@@ -76,7 +78,7 @@ const WishlistPage = () => {
                     Move to Bag
                   </button>
                   <button
-                    onClick={() => handleRemove(item.id)}
+                    onClick={() => handleRemove(item._id)}
                     className="flex-1 border border-gray-300 py-2 rounded-xl font-medium text-sm md:text-base hover:bg-gray-100 transition"
                   >
                     Remove

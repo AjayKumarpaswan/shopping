@@ -23,18 +23,22 @@ const cartSlice = createSlice({
         localStorage.setItem(`cart_${userId}`, JSON.stringify(state.items));
       }
     },
-    removeFromCart: (state, action) => {
-      state.items = state.items.filter((item) => item.id !== action.payload);
-      const userId = getUserId();
-      if (userId) {
-        localStorage.setItem(`cart_${userId}`, JSON.stringify(state.items));
-      }
-    },
-    clearCartOnLogout: (state) => {
-      const userId = getUserId();
-      
-      state.items = [];
-    },
+   removeFromCart: (state, action) => {
+  state.items = state.items.filter((item) => item._id !== action.payload);
+  const userId = getUserId();
+  if (userId) {
+    localStorage.setItem(`cart_${userId}`, JSON.stringify(state.items));
+  }
+},
+
+   clearCartOnLogout: (state) => {
+  state.items = [];
+  const userId = getUserId();
+  if (userId) {
+    localStorage.removeItem(`cart_${userId}`);
+  }
+},
+
     loadCartOnLogin: (state) => {
       state.items = loadUserCart();
     },
