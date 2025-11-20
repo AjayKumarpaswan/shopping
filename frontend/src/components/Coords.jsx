@@ -32,7 +32,7 @@ const Coords = () => {
   return (
     <>
       <Header />
-      <div className="bg-[#2c0d0d] pt-24 md:pt-28 px-4 md:px-10 text-white">
+      <div className="bg-[#2c0d0d] pt-24 md:pt-40 px-4 md:px-10 text-white">
         <h1 className="text-3xl font-bold mb-8 text-center">
           Women's Co-ords
         </h1>

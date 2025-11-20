@@ -11,6 +11,7 @@ import ProductDetail from './components/ProductDetail'
 import CartPage from './components/CartPage'
 import WishlistPage from './components/WishlistPage'
 import OrderDetails from './components/OrderDetails'
+import VaultAtlysLanding from './components/VaultAtlysLanding'
 
 
  
@@ -29,6 +30,7 @@ const App = () => {
        <Route path="/cart" element={<CartPage />} />
        <Route path="/wishlist"element={<WishlistPage/>}/>
        <Route path="/order-details" element={<OrderDetails />} />
+       <Route path="vault" element={<VaultAtlysLanding/>} />
 
       </Routes>
   

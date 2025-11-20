@@ -30,7 +30,7 @@ const Lehenga = () => {
   return (
     <>
       <Header />
-      <div className="bg-[#2c0d0d] pt-24 md:pt-28 px-4 md:px-10 text-white">
+      <div className="bg-[#2c0d0d] pt-24 md:pt-40 px-4 md:px-10 text-white">
         <h1 className="text-3xl font-bold mb-8 text-center">Women's Lehenga</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-center justify-center">
