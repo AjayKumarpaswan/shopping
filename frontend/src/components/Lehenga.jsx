@@ -23,8 +23,16 @@ const Lehenga = () => {
 
   const handleShowMore = () => setVisibleCount(prev => prev + 5);
 
+  // Navigate to ProductDetail with category info
   const handleProductClick = (product) => {
-    navigate(`/product/${product._id}`, { state: { product } });
+    navigate(`/product/${product._id}`, {
+      state: {
+        product: {
+          ...product,
+          category: "Lehenga", // pass the category name for related products
+        },
+      },
+    });
   };
 
   return (

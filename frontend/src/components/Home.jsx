@@ -21,9 +21,9 @@ const Home = () => {
           axios.get("http://localhost:5000/api/products/category/Coords"),
         ]);
 
-       setKurtas(kurtasRes.data.slice(0, 3));
-setLehengas(lehengasRes.data.slice(0, 3));
-setCoords(coordsRes.data.slice(0, 3));
+        setKurtas(kurtasRes.data.slice(0, 3));
+        setLehengas(lehengasRes.data.slice(0, 3));
+        setCoords(coordsRes.data.slice(0, 3));
 
       } catch (error) {
         console.log("Home Fetch Error:", error);
@@ -34,9 +34,20 @@ setCoords(coordsRes.data.slice(0, 3));
   }, []);
 
   // On product click → go to product details page
-  const handleProductClick = (item) => {
-    navigate(`/product/${item._id}`, { state: { product: item } });
+  // Home.jsx
+  const handleProductClick = (item, categoryName) => {
+    navigate(`/product/${item._id}`, {
+      state: {
+        product: {
+          ...item,
+          category: categoryName, // pass the name, not the id
+        },
+      },
+    });
   };
+
+
+
 
   // Reuse card design exactly like your static UI
   const renderProductCard = (item) => {
@@ -148,7 +159,11 @@ setCoords(coordsRes.data.slice(0, 3));
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
-            {kurtas.map((item) => renderProductCard(item))}
+            {kurtas.map((item) => (
+              <div key={item._id} onClick={() => handleProductClick(item, "Kurta")}>
+                {renderProductCard(item)}
+              </div>
+            ))}
           </div>
         </section>
 
@@ -159,7 +174,11 @@ setCoords(coordsRes.data.slice(0, 3));
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
-            {lehengas.map((item) => renderProductCard(item))}
+            {lehengas.map((item) => (
+              <div key={item._id} onClick={() => handleProductClick(item, "Lehenga")}>
+                {renderProductCard(item)}
+              </div>
+            ))}
           </div>
         </section>
 
@@ -170,7 +189,11 @@ setCoords(coordsRes.data.slice(0, 3));
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
-            {coords.map((item) => renderProductCard(item))}
+            {coords.map((item) => (
+              <div key={item._id} onClick={() => handleProductClick(item, "Coords")}>
+                {renderProductCard(item)}
+              </div>
+            ))}
           </div>
         </section>
 

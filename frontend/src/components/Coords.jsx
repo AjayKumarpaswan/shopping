@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "./Header";
@@ -25,8 +25,47 @@ const Coords = () => {
 
   const handleShowMore = () => setVisibleCount((prev) => prev + 5);
 
+  // Navigate to ProductDetail with category info
   const handleProductClick = (product) => {
-    navigate(`/product/${product._id}`, { state: { product } });
+    navigate(`/product/${product._id}`, {
+      state: {
+        product: {
+          ...product,
+          category: "Coords", // pass the category name for related products
+        },
+      },
+    });
+  };
+
+  // Card rendering function (reuseable)
+  const renderProductCard = (item) => {
+    const discount = Math.round(
+      ((item.oldPrice - item.price) / item.oldPrice) * 100
+    );
+
+    return (
+      <div
+        onClick={() => handleProductClick(item)}
+        className="cursor-pointer border rounded-lg p-4 bg-white shadow hover:shadow-lg transition duration-300"
+      >
+        <img
+          src={
+            item.images && item.images.length > 0
+              ? `http://localhost:5000/uploads/${item.images[0]}`
+              : "/fallback.jpg"
+          }
+          alt={item.name}
+          className="w-full h-64 object-contain rounded-md mb-4"
+        />
+        <h2 className="text-lg font-semibold text-gray-800">{item.name}</h2>
+        <p className="text-gray-600 text-sm mb-2">{item.description}</p>
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-gray-400 line-through">₹{item.oldPrice}</span>
+          <span className="text-green-600 font-semibold">₹{item.price}</span>
+          <span className="text-red-500 text-sm font-medium">{discount}% OFF</span>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -37,32 +76,10 @@ const Coords = () => {
           Women's Co-ords
         </h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-center justify-center">
-          {products.slice(0, visibleCount).map((item) => {
-            const discount = Math.round(((item.oldPrice - item.price) / item.oldPrice) * 100);
-            return (
-              <div
-                key={item._id}
-                onClick={() => handleProductClick(item)}
-                className="cursor-pointer border rounded-lg p-4 bg-white shadow hover:shadow-lg transition duration-300"
-              >
-               <img
-  src={item.images.length > 0 ? `http://localhost:5000/uploads/${item.images[0]}` : "/fallback.jpg"}
-  alt={item.name}
-  className="w-full h-64 object-contain rounded-md mb-4"
-/>
-
-
-                <h2 className="text-lg font-semibold text-gray-800">{item.name}</h2>
-                <p className="text-gray-600 text-sm mb-2">{item.description}</p>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-gray-400 line-through">₹{item.oldPrice}</span>
-                  <span className="text-green-600 font-semibold">₹{item.price}</span>
-                  <span className="text-red-500 text-sm font-medium">{discount}% OFF</span>
-                </div>
-              </div>
-            );
-          })}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {products.slice(0, visibleCount).map((item) => (
+            <div key={item._id}>{renderProductCard(item)}</div>
+          ))}
         </div>
 
         {visibleCount < products.length && (

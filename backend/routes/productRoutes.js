@@ -5,7 +5,8 @@ import {
   getProductsByCategory, 
   getProductById,
   updateProduct, 
-  deleteProduct  
+  deleteProduct,  
+  getProductsByCategoryById
 } from "../controllers/productController.js";
 
 import { upload } from "../middleware/uploadMiddleware.js";
@@ -22,6 +23,9 @@ router.post(
 router.get("/", getAllProducts);
 router.get("/category/:categoryName", getProductsByCategory);
 router.get("/:id", getProductById);
+// routes/productRoutes.js
+router.get("/category/:categoryId", getProductsByCategoryById);
+
 
 // Update product (with optional new images)
 router.put("/:id", upload.array("images", 10), updateProduct);
